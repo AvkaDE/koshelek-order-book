@@ -14,7 +14,9 @@
     </v-app-bar>
 
     <v-main>
-      <RouterView />
+      <v-fade-transition>
+        <RouterView />
+      </v-fade-transition>
     </v-main>
   </v-app>
 </template>
@@ -37,7 +39,7 @@ import { RouterLink, RouterView } from 'vue-router'
 
     &:visited {
       text-decoration: none;
-      color: black;
+      color: whitesmoke;
     }
     &.active {
       color: mediumseagreen;

@@ -13,7 +13,10 @@ import router from './router'
 const vuetify = createVuetify({
   components,
   directives,
-  blueprint: md1
+  blueprint: md1,
+  theme: {
+    defaultTheme: 'dark'
+  }
 })
 
 const app = createApp(App)
