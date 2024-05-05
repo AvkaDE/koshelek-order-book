@@ -3,22 +3,25 @@
     <v-row>
       <v-col md="3">
         <v-select
-          v-model="selectedPair"
+          v-model="rootStore.selectedPair"
           label="Select currency"
           :items="['BTCUSDT', 'BNBBTC', 'ETHBTC']"
           variant="outlined"
+          :menuProps="{
+            closeOnContentClick: true
+          }"
         ></v-select>
       </v-col>
     </v-row>
 
     Change history:
-    <v-row v-if="changeLogs.length">
+    <v-row v-if="rootStore.changelog.length">
       <v-col md="4">
         <v-list lines="three" maxHeight="70vh">
           <v-list-item
-            v-for="(pair, idx) in changeLogs"
+            v-for="(pair, idx) in reversedChangelog"
             :key="+pair.timestamp"
-            :title="'Change #' + (idx + 1)"
+            :title="'Change #' + (rootStore.changelog.length - idx)"
           >
             <v-list-item-subtitle>
               Old:
@@ -44,37 +47,24 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, ref } from 'vue'
+import { defineComponent, watch, computed } from 'vue'
 import { useRootStore } from '@/stores/rootStore'
-
-interface IPairItem {
-  old: string
-  new: string
-  timestamp: Date
-}
 
 export default defineComponent({
   name: 'SettingsView',
   setup() {
     const rootStore = useRootStore()
 
-    const selectedPair = ref('BTCUSDT')
+    const reversedChangelog = computed(() => rootStore.changelog)
 
-    const changeLogs = ref<IPairItem[]>([])
-
-    watch(selectedPair, (newPair, oldPair) => {
-      rootStore.changePair(newPair)
-
-      const newItem = {
-        old: oldPair,
-        new: newPair,
-        timestamp: new Date()
+    watch(
+      () => rootStore.selectedPair,
+      (newPair, oldPair) => {
+        rootStore.changePair(newPair, oldPair)
       }
+    )
 
-      changeLogs.value.push(newItem)
-    })
-
-    return { selectedPair, changeLogs }
+    return { rootStore, reversedChangelog }
   }
 })
 </script>

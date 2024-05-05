@@ -1,16 +1,31 @@
-import { ref } from 'vue'
+import type { IPairItem, TSettings } from '@/types'
 import { defineStore } from 'pinia'
 
-export const useRootStore = defineStore('rootStore', () => {
-  const selectedPair = ref('BTCUSDT')
+type IRootStore = {
+  selectedPair: TSettings
+  changelog: IPairItem[]
+}
 
-  async function changePair(newPair: string) {
-    selectedPair.value = newPair
+export const useRootStore = defineStore('rootStore', {
+  state: () =>
+    <IRootStore>{
+      selectedPair: 'BTCUSDT',
+      changelog: []
+    },
+  actions: {
+    async changePair(newPair: TSettings, oldPair: TSettings) {
+      this.selectedPair = newPair
 
-    await subcribeToUpdates(newPair)
+      const newItem = {
+        old: oldPair,
+        new: newPair,
+        timestamp: new Date()
+      }
+
+      this.changelog.push(newItem)
+
+      await this.subcribeToUpdates(newPair)
+    },
+    async subcribeToUpdates(tickerName: string) {}
   }
-
-  async function subcribeToUpdates(tickerName: string) {}
-
-  return { selectedPair, changePair }
 })
