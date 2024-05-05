@@ -1,3 +1,4 @@
+import { fetchDepth } from '@/api'
 import type { IPairItem, TSettings } from '@/types'
 import { defineStore } from 'pinia'
 
@@ -23,6 +24,9 @@ export const useRootStore = defineStore('rootStore', {
       }
 
       this.changelog.push(newItem)
+
+      const res = await fetchDepth(newPair)
+      console.log(res)
 
       await this.subcribeToUpdates(newPair)
     },
