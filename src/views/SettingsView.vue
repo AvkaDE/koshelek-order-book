@@ -12,11 +12,11 @@
     </v-row>
 
     Change history:
-    <v-row>
+    <v-row v-if="changeLogs.length">
       <v-col md="4">
-        <v-list lines="three">
+        <v-list lines="three" maxHeight="70vh">
           <v-list-item
-            v-for="(pair, idx) in mockLogs"
+            v-for="(pair, idx) in changeLogs"
             :key="+pair.timestamp"
             :title="'Change #' + (idx + 1)"
           >
@@ -31,57 +31,50 @@
                   ><b>{{ pair.new }}</b></span
                 >
               </p>
-              <p>Date: {{ pair.timestamp.toLocaleString('ru') }}</p>
+              <p>
+                Date: <b>{{ pair.timestamp.toLocaleString('ru') }}</b>
+              </p>
             </v-list-item-subtitle>
           </v-list-item>
         </v-list>
       </v-col>
     </v-row>
+    <span v-else>current history is empty</span>
   </v-container>
 </template>
 
 <script lang="ts">
-import { ref } from 'vue'
-import { defineComponent } from 'vue'
+import { defineComponent, watch, ref } from 'vue'
+import { useRootStore } from '@/stores/rootStore'
+
+interface IPairItem {
+  old: string
+  new: string
+  timestamp: Date
+}
 
 export default defineComponent({
   name: 'SettingsView',
   setup() {
+    const rootStore = useRootStore()
+
     const selectedPair = ref('BTCUSDT')
 
-    const mockLogs = [
-      {
-        old: 'BTCUSDT',
-        new: 'BNBBTC',
-        timestamp: new Date(2024, 3, 5, 20, 13, 22)
-      },
-      {
-        old: 'BNBBTC',
-        new: 'BTCUSDT',
-        timestamp: new Date(2024, 1, 2, 11, 12, 35)
-      },
-      {
-        old: 'BTCUSDT',
-        new: 'ETHBTC',
-        timestamp: new Date(2024, 6, 7, 10, 3, 16)
-      },
-      {
-        old: 'ETHBTC',
-        new: 'BNBBTC',
-        timestamp: new Date(2024, 8, 9, 15, 45, 67)
-      },
-      {
-        old: 'BNBBTC',
-        new: 'ETHBTC',
-        timestamp: new Date(2024, 7, 7, 9, 3, 2)
-      },
-      {
-        old: 'ETHBTC',
-        new: 'BTCUSDT',
-        timestamp: new Date(2024, 1, 1, 20, 7, 26)
+    const changeLogs = ref<IPairItem[]>([])
+
+    watch(selectedPair, (newPair, oldPair) => {
+      rootStore.changePair(newPair)
+
+      const newItem = {
+        old: oldPair,
+        new: newPair,
+        timestamp: new Date()
       }
-    ]
-    return { selectedPair, mockLogs }
+
+      changeLogs.value.push(newItem)
+    })
+
+    return { selectedPair, changeLogs }
   }
 })
 </script>

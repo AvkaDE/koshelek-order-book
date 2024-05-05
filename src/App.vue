@@ -14,9 +14,11 @@
     </v-app-bar>
 
     <v-main>
-      <v-fade-transition>
-        <RouterView />
-      </v-fade-transition>
+      <RouterView v-slot="{ Component }">
+        <v-fade-transition>
+          <component :is="Component" />
+        </v-fade-transition>
+      </RouterView>
     </v-main>
   </v-app>
 </template>
