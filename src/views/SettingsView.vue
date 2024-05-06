@@ -47,25 +47,36 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, watch, computed } from 'vue'
+import { defineComponent, watch, computed, onMounted } from 'vue'
 import { useRootStore } from '@/stores/rootStore'
-import { socket } from '@/api/socket'
+import { socketConnection, syncSnapshot } from '@/api/socket'
+import { state } from '@/api/state'
 
 export default defineComponent({
   name: 'SettingsView',
   setup() {
     const rootStore = useRootStore()
-
     const reversedChangelog = computed(() => rootStore.changelog)
 
     watch(
       () => rootStore.selectedPair,
-      (newPair, oldPair) => {
-        rootStore.changePair(newPair, oldPair)
+      async (newPair, oldPair) => {
+        if (state.snapshotLoaded) {
+          state.socket?.close()
+          state.snapshotLoaded = false
+        }
 
-        socket(newPair)
+        rootStore.changePair(newPair, oldPair)
+        socketConnection(newPair)
       }
     )
+
+    onMounted(async () => {
+      if (!state.snapshotLoaded) {
+        socketConnection(rootStore.selectedPair)
+        await syncSnapshot(rootStore.selectedPair)
+      }
+    })
 
     return { rootStore, reversedChangelog }
   }

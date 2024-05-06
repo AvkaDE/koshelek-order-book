@@ -1,19 +1,16 @@
-import { state } from '@/api/socket'
 import type { IPairItem, TSettings } from '@/types'
 import { defineStore } from 'pinia'
 
 type IRootStore = {
   selectedPair: TSettings
   changelog: IPairItem[]
-  state: any
 }
 
 export const useRootStore = defineStore('rootStore', {
   state: () =>
     <IRootStore>{
       selectedPair: 'BTCUSDT',
-      changelog: [],
-      state: state
+      changelog: []
     },
   actions: {
     async changePair(newPair: TSettings, oldPair: TSettings) {

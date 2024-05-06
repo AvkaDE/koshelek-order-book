@@ -7,7 +7,7 @@
 
       <v-app-bar-title>
         <nav class="nav-wrapper">
-          <RouterLink class="nav-link" activeClass="active" to="/settings">Settings</RouterLink>
+          <RouterLink class="nav-link" activeClass="active" to="/">Settings</RouterLink>
           <RouterLink class="nav-link" activeClass="active" to="/order-book">Order book</RouterLink>
         </nav>
       </v-app-bar-title>
