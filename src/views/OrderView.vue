@@ -20,7 +20,7 @@
         >
           <template v-slot:item="{ item }">
             <tr>
-              <td>
+              <td class="ask">
                 {{
                   Number(item.price) > 1
                     ? Number(item.price).toPrecision(5)
@@ -43,7 +43,7 @@
         >
           <template v-slot:item="{ item }">
             <tr>
-              <td>
+              <td class="bid">
                 {{
                   Number(item.price) > 1
                     ? Number(item.price).toPrecision(5)
@@ -77,4 +77,12 @@ export default defineComponent({
 })
 </script>
 
-<style scoped></style>
+<style scoped>
+.ask {
+  color: mediumseagreen;
+}
+
+.bid {
+  color: red;
+}
+</style>
