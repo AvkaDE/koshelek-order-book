@@ -1,6 +1,11 @@
 <template>
   <v-container fluid>
     <v-row>
+      <v-col md="3">
+        Selected currency pair: <b>{{ rootStore.selectedPair }}</b>
+      </v-col>
+    </v-row>
+    <v-row>
       <v-col md="6"> BIDS: </v-col>
       <v-col md="6"> ASKS: </v-col>
     </v-row>
@@ -8,194 +13,66 @@
       <v-col md="6">
         <v-data-table
           :fixed-header="true"
-          :items="mockAsks"
+          :items="asks"
           :items-per-page="100"
           :items-per-page-options="[100, 500, 1000]"
           height="75vh"
-        ></v-data-table>
+        >
+          <template v-slot:item="{ item }">
+            <tr>
+              <td>
+                {{
+                  Number(item.price) > 1
+                    ? Number(item.price).toPrecision(5)
+                    : Number(item.price).toFixed(5)
+                }}
+              </td>
+              <td>{{ Number(item.quantity).toPrecision(5) }}</td>
+              <td>{{ Number(item.total).toPrecision(5) }}</td>
+            </tr>
+          </template>
+        </v-data-table>
       </v-col>
       <v-col md="6">
         <v-data-table
           :fixed-header="true"
-          :items="mockAsks"
+          :items="bids"
           :items-per-page="100"
           :items-per-page-options="[100, 500, 1000]"
           height="75vh"
-        ></v-data-table>
+        >
+          <template v-slot:item="{ item }">
+            <tr>
+              <td>
+                {{
+                  Number(item.price) > 1
+                    ? Number(item.price).toPrecision(5)
+                    : Number(item.price).toFixed(5)
+                }}
+              </td>
+              <td>{{ Number(item.quantity).toPrecision(5) }}</td>
+              <td>{{ Number(item.total).toPrecision(5) }}</td>
+            </tr>
+          </template>
+        </v-data-table>
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
-import { defineComponent } from 'vue'
+import { defineComponent, computed } from 'vue'
+import { state } from '@/api/socket'
+import { useRootStore } from '@/stores/rootStore'
 
 export default defineComponent({
   name: 'OrderView',
   setup() {
-    const mockAsks = [
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      },
-      {
-        price: 123,
-        quantity: 3,
-        total: 1213
-      }
-    ]
-    return { mockAsks }
+    const rootStore = useRootStore()
+
+    const asks = computed(() => state.result.asks.sort((a, b) => +b.price - +a.price))
+    const bids = computed(() => state.result.bids.sort((a, b) => +b.price - +a.price))
+    return { rootStore, asks, bids }
   }
 })
 </script>

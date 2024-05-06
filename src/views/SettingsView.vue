@@ -49,6 +49,7 @@
 <script lang="ts">
 import { defineComponent, watch, computed } from 'vue'
 import { useRootStore } from '@/stores/rootStore'
+import { socket } from '@/api/socket'
 
 export default defineComponent({
   name: 'SettingsView',
@@ -61,6 +62,8 @@ export default defineComponent({
       () => rootStore.selectedPair,
       (newPair, oldPair) => {
         rootStore.changePair(newPair, oldPair)
+
+        socket(newPair)
       }
     )
 
