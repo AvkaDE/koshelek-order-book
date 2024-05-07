@@ -2,7 +2,7 @@
   <v-container fluid>
     <v-row>
       <v-col md="3">
-        Selected currency pair: <b>{{ rootStore.selectedPair }}</b>
+        Текущая выбранная валютная пара: <b>{{ rootStore.selectedPair }}</b>
       </v-col>
     </v-row>
     <v-row>

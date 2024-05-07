@@ -4,7 +4,7 @@
       <v-col md="3">
         <v-select
           v-model="rootStore.selectedPair"
-          label="Select currency"
+          label="Выберите валютную пару"
           :items="['BTCUSDT', 'BNBBTC', 'ETHBTC']"
           variant="outlined"
           :menuProps="{
@@ -14,7 +14,7 @@
       </v-col>
     </v-row>
 
-    Change history:
+    История изменений
     <v-row v-if="rootStore.changelog.length">
       <v-col md="4">
         <v-list lines="three" maxHeight="70vh">
@@ -24,25 +24,25 @@
             :title="'Change #' + (rootStore.changelog.length - idx)"
           >
             <v-list-item-subtitle>
-              Old:
+              Было
               <span class="old"
                 ><b>{{ pair.old }}</b></span
               >
               <p>
-                New:
+                Стало:
                 <span class="new"
                   ><b>{{ pair.new }}</b></span
                 >
               </p>
               <p>
-                Date: <b>{{ pair.timestamp.toLocaleString('ru') }}</b>
+                Дата: <b>{{ pair.timestamp.toLocaleString('ru') }}</b>
               </p>
             </v-list-item-subtitle>
           </v-list-item>
         </v-list>
       </v-col>
     </v-row>
-    <span v-else>current history is empty</span>
+    <span v-else>история изменения пуста, для обновления измените валютную пару</span>
   </v-container>
 </template>
 
