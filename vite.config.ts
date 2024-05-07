@@ -3,11 +3,10 @@ import { fileURLToPath, URL } from 'node:url'
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
 
-// https://vitejs.dev/config/
+// https://github.com/AvkaDE/koshelek-order-book/tree/dev
 export default defineConfig({
-  plugins: [
-    vue(),
-  ],
+  base: 'koshelek-order-book',
+  plugins: [vue()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url))
